@@ -65,18 +65,18 @@ const LinkTWcontrollers = {
     },
 
     // Lấy link theo slug
-    getLinkBySlug: async (req, res) => {
-        const { slug } = req.params;
-        try {
-            const link = await LinkTW.findOne({ slug });
-            if (!link) {
-                return res.status(404).json({ message: "Link not found" });
-            }
-            return res.status(200).json(link);
-        } catch (error) {
-            return res.status(500).json({ message: error.message });
-        }
-    },
+    // getLinkBySlug: async (req, res) => {
+    //     const { slug } = req.params;
+    //     try {
+    //         const link = await LinkTW.findOne({ slug });
+    //         if (!link) {
+    //             return res.status(404).json({ message: "Link not found" });
+    //         }
+    //         return res.status(200).json(link);
+    //     } catch (error) {
+    //         return res.status(500).json({ message: error.message });
+    //     }
+    // },
 
     // Lấy danh sách tất cả slug
     getallSlug: async (req, res) => {

@@ -12,7 +12,7 @@ route.put('/:slug', LinkTWcontrollers.updateLink);
 route.delete('/:slug', LinkTWcontrollers.deleteLink);
 
 // API lấy dữ liệu liên kết
-route.get('/api/:slug', LinkTWcontrollers.getLinkBySlug);
+// route.get('/api/:slug', LinkTWcontrollers.getLinkBySlug);
 
 // Trang chuyển hướng với thẻ OG và Twitter Card
 route.get('/api/:slug', async (req, res) => {
