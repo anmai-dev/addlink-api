@@ -12,10 +12,10 @@ route.put('/:slug', LinkTWcontrollers.updateLink);
 route.delete('/:slug', LinkTWcontrollers.deleteLink);
 
 // API lấy dữ liệu liên kết
-// route.get('/api/:slug', LinkTWcontrollers.getLinkBySlug);
+// route.get('/:slug', LinkTWcontrollers.getLinkBySlug);
 
 // Trang chuyển hướng với thẻ OG và Twitter Card
-route.get('/api/:slug', async (req, res) => {
+route.get('/:slug', async (req, res) => {
   const { slug } = req.params;
   const userAgent = req.headers['user-agent'] || '';
   const domain = process.env.APP_DOMAIN || 'https://yourdomain.com'; // Lấy domain từ .env
