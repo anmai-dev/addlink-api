@@ -18,7 +18,7 @@ mongoose.connect(process.env.URL_MONGODB)
 
 // Cấu hình CORS
 app.use(cors({
-    origin: [process.env.APP_DOMAIN || 'http://localhost:3000'],
+    origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
