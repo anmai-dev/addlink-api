@@ -9,7 +9,7 @@ route.post('/', middlewareVerify.verifyToken, uploadCloud.single('image'), LinkT
 route.get('/', LinkTWcontrollers.getAllLink);
 route.get('/user-slugs', middlewareVerify.verifyToken, LinkTWcontrollers.getSlugByuserId);
 route.put('/:slug', LinkTWcontrollers.updateLink);
-route.delete('/:slug', LinkTWcontrollers.deleteLink);
+route.delete('/:id', LinkTWcontrollers.deleteLink);
 
 // API lấy dữ liệu liên kết
 // route.get('/:slug', LinkTWcontrollers.getLinkBySlug);

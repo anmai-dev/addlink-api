@@ -64,19 +64,7 @@ const LinkTWcontrollers = {
         }
     },
 
-    // Lấy link theo slug
-    // getLinkBySlug: async (req, res) => {
-    //     const { slug } = req.params;
-    //     try {
-    //         const link = await LinkTW.findOne({ slug });
-    //         if (!link) {
-    //             return res.status(404).json({ message: "Link not found" });
-    //         }
-    //         return res.status(200).json(link);
-    //     } catch (error) {
-    //         return res.status(500).json({ message: error.message });
-    //     }
-    // },
+
 
     // Lấy danh sách tất cả slug
     getallSlug: async (req, res) => {
@@ -111,21 +99,36 @@ const LinkTWcontrollers = {
             return res.status(500).json({ message: error.message });
         }
     },
-
-    // Xoá link theo slug
     deleteLink: async (req, res) => {
-        const { slug } = req.params;
         try {
-            const link = await LinkTW.findOne({ slug });
+            const link = await LinkTW.findById(req.params.id);
             if (!link) {
                 return res.status(404).json({ message: "Link not found" });
             }
-            await link.deleteOne();
-            return res.status(200).json({ message: "Link deleted successfully" });
+            console.log(`delete link ${link._id}`);
+            console.log(`delete image ${link.image}`)
+
+            // xoa anh tu cloudinary
+            try {
+                if (link.image.includes('cloudinary.com')) {
+                    // Lấy public ID từ URL Cloudinary (vd: https://res.cloudinary.com/demo/image/upload/v1234567890/image_video_project/team_logos/abcdef.jpg)
+                    const publicId = savedLink.image.split('/').slice(-3).join('/').split('.')[0]; // image_video_project/team_logos/abcdef
+                    await cloudinary.uploader.destroy(publicId);
+                    console.log(`Deleted team1 logo from Cloudinary: ${publicId}`);
+                }
+            } catch (error) {
+                console.error('Error deleting images from Cloudinary:', error);
+                // Tiếp tục xóa match trong database ngay cả khi không xóa được ảnh
+            }
+            // Xóa match từ database
+            await LinkTW.findByIdAndDelete(req.params.id);
+            return res.status(200).json({ message: 'Match deleted successfully', id: req.params.id });
         } catch (error) {
-            return res.status(500).json({ message: error.message });
+            console.error('Error deleting match:', error);
+            return res.status(500).json({ message: 'Internal Server Error', error: error.message });
         }
     }
-};
+
+}
 
 module.exports = LinkTWcontrollers;
