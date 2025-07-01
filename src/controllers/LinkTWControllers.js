@@ -116,9 +116,11 @@ const LinkTWcontrollers = {
                     await cloudinary.uploader.destroy(publicId);
                     console.log(`Deleted  from Cloudinary: ${publicId}`);
                 }
+                return res.status(200).json({ message: 'Image deleted successfully' });
             } catch (error) {
                 console.error('Error deleting images from Cloudinary:', error);
-                // Tiếp tục xóa match trong database ngay cả khi không xóa được ảnh
+                // Tiếp tục xóa match trong database ngay cả khi không xóa được ảh
+                return res.status(500).json({ message: 'Error deleting images from Cloudinary' });
             }
             // Xóa match từ database
             await LinkTW.findByIdAndDelete(req.params.id);
