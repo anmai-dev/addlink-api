@@ -101,7 +101,7 @@ const LinkTWcontrollers = {
     },
     deleteLink: async (req, res) => {
         try {
-            const link = await LinkTW.findById(req.params.id);
+            const link = await LinkTW.findById(req.params._id);
             if (!link) {
                 return res.status(404).json({ message: "Link not found" });
             }
@@ -114,15 +114,15 @@ const LinkTWcontrollers = {
                     // Lấy public ID từ URL Cloudinary (vd: https://res.cloudinary.com/demo/image/upload/v1234567890/image_video_project/team_logos/abcdef.jpg)
                     const publicId = link.image.split('/').slice(-3).join('/').split('.')[0]; // image_video_project/team_logos/abcdef
                     await cloudinary.uploader.destroy(publicId);
-                    console.log(`Deleted team1 logo from Cloudinary: ${publicId}`);
+                    console.log(`Deleted  from Cloudinary: ${publicId}`);
                 }
             } catch (error) {
                 console.error('Error deleting images from Cloudinary:', error);
                 // Tiếp tục xóa match trong database ngay cả khi không xóa được ảnh
             }
-            // Xóa match từ database
-            await LinkTW.findByIdAndDelete(req.params.id);
-            return res.status(200).json({ message: 'Match deleted successfully', id: req.params.id });
+
+            await LinkTW.findByIdAndDelete(req.params._id);
+            return res.status(200).json({ message: 'Match deleted successfully', id: req.params._id });
         } catch (error) {
             console.error('Error deleting match:', error);
             return res.status(500).json({ message: 'Internal Server Error', error: error.message });
