@@ -118,8 +118,7 @@ const LinkTWcontrollers = {
                 }
             } catch (error) {
                 console.error('Error deleting images from Cloudinary:', error);
-                // Tiếp tục xóa match trong database ngay cả khi không xóa được ảh
-                return res.status(500).json({ message: 'Error deleting images from Cloudinary' });
+                // Tiếp tục xóa match trong database ngay cả khi không xóa được ảnh
             }
             // Xóa match từ database
             await LinkTW.findByIdAndDelete(req.params.id);
