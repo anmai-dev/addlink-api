@@ -6,7 +6,13 @@ const fs = require('fs');
 
 
 
-
+function getPublicIdFromUrl(url) {
+    const parts = url.split('/');
+    const versionIndex = parts.findIndex(part => part.startsWith('v'));
+    const publicIdWithExt = parts.slice(versionIndex + 1).join('/');
+    const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ""); // loại bỏ phần mở rộng .png, .jpg, ...
+    return publicId;
+}
 
 const LinkTWcontrollers = {
     // Tạo link mới
@@ -105,27 +111,29 @@ const LinkTWcontrollers = {
             if (!link) {
                 return res.status(404).json({ message: "Link not found" });
             }
-            console.log(`delete link ${link._id}`);
-            console.log(`delete image ${link.image}`)
 
-            // xoa anh tu cloudinary
+            console.log(`Deleting link ${link._id}`);
+            console.log(`Image URL: ${link.image}`);
+
+            // ✅ Xoá ảnh từ Cloudinary nếu có
             try {
-                if (link.image.includes('cloudinary.com')) {
-                    // Lấy public ID từ URL Cloudinary (vd: https://res.cloudinary.com/demo/image/upload/v1234567890/image_video_project/team_logos/abcdef.jpg)
-                    const publicId = link.image.split('/').slice(-3).join('/').split('.')[0]; // image_video_project/team_logos/abcdef
+                if (link.image) {
+                    const publicId = getPublicIdFromUrl(link.image);
                     console.log('Cloudinary publicId:', publicId);
+
                     const result = await cloudinary.uploader.destroy(publicId);
                     console.log('Cloudinary destroy result:', result);
                 }
             } catch (error) {
-                console.error('Error deleting images from Cloudinary:', error);
-                // Tiếp tục xóa match trong database ngay cả khi không xóa được ảnh
+                console.error('❌ Error deleting image from Cloudinary:', error.message);
+                // Tiếp tục xóa trong MongoDB dù không xoá được ảnh
             }
-            // Xóa match từ database
+
+            // ✅ Xóa record khỏi MongoDB
             await LinkTW.findByIdAndDelete(req.params.id);
-            return res.status(200).json({ message: 'Match deleted successfully', id: req.params.id });
+            return res.status(200).json({ message: 'Link deleted successfully', id: req.params.id });
         } catch (error) {
-            console.error('Error deleting match:', error);
+            console.error('❌ Error deleting link:', error.message);
             return res.status(500).json({ message: 'Internal Server Error', error: error.message });
         }
     }
