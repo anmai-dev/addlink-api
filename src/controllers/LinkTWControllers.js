@@ -112,7 +112,7 @@ const LinkTWcontrollers = {
             try {
                 if (link.image.includes('cloudinary.com')) {
                     // Lấy public ID từ URL Cloudinary (vd: https://res.cloudinary.com/demo/image/upload/v1234567890/image_video_project/team_logos/abcdef.jpg)
-                    const publicId = savedLink.image.split('/').slice(-3).join('/').split('.')[0]; // image_video_project/team_logos/abcdef
+                    const publicId = link.image.split('/').slice(-3).join('/').split('.')[0]; // image_video_project/team_logos/abcdef
                     await cloudinary.uploader.destroy(publicId);
                     console.log(`Deleted team1 logo from Cloudinary: ${publicId}`);
                 }
